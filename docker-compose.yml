@@ -1,0 +1,12 @@
+services:
+  elize:
+    image: w3clouds-elize:v1.0
+    container_name: elize
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    networks:
+      - dockge_default
+networks:
+  dockge_default:
+    external: true
