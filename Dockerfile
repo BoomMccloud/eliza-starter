@@ -14,6 +14,7 @@ ADD .env /app/.env
 
 ADD src /app/docs
 ADD characters /app/characters
+RUN pnpm update
 RUN pnpm i
 
 # Command to run the container
