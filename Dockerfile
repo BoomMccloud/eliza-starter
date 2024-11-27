@@ -17,5 +17,5 @@ ADD characters /app/characters
 RUN pnpm i
 
 # Command to run the container
-CMD pnpm start --characters="./characters/eliza.character.json"
-#CMD ["tail", "-f", "/dev/null"]
+#CMD pnpm start --characters="./characters/eliza.character.json"
+CMD ["tail", "-f", "/dev/null"]
