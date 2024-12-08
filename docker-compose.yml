@@ -1,12 +1,46 @@
 services:
-  elize:
-    image: w3clouds-elize:v1.0
-    container_name: elize
+  olivia:
+    image: olivia:v1.0
+    container_name: olivia
     build:
       context: .
       dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
     networks:
-      - dockge_default
+      - network_service1
+    environment:
+      - DATABASE_URL=postgresql://eliza:wenmoon123@eliza-postgres:5432/elizadb
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    container_name: eliza-postgres
+    restart: always  # Added restart policy
+    environment:
+      - POSTGRES_USER=eliza
+      - POSTGRES_PASSWORD=wenmoon123
+      - POSTGRES_DB=elizadb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Optional: if you have initialization scripts
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./postgres/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - network_service1
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get install -y postgresql-15-pgvector postgresql-contrib &&
+        docker-entrypoint.sh postgres
+      "
+
+volumes:
+  postgres_data:
+
 networks:
-  dockge_default:
-    external: true
+  network_service1:
+    driver: bridge
