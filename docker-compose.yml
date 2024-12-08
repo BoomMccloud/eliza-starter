@@ -1,7 +1,7 @@
 services:
   olivia:
-    image: olivia:v1.0
-    container_name: olivia
+    image: vdb:v1.0
+    container_name: vdb-service
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -10,18 +10,18 @@ services:
     networks:
       - network_service1
     environment:
-      - DATABASE_URL=postgresql://eliza:wenmoon123@eliza-postgres:5432/elizadb
+      - DATABASE_URL=postgresql://eliza:wenmoon123@vbd-db:5432/vdb
     depends_on:
       - postgres
 
   postgres:
     image: postgres:15
-    container_name: eliza-postgres
+    container_name: vdb-db
     restart: always  # Added restart policy
     environment:
       - POSTGRES_USER=eliza
       - POSTGRES_PASSWORD=wenmoon123
-      - POSTGRES_DB=elizadb
+      - POSTGRES_DB=vdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
       # Optional: if you have initialization scripts

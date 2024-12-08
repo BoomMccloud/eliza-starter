@@ -29,6 +29,45 @@ const readJsonFile = (filePath) => {
 
 const writeJsonFile = (filePath, data) => {
   try {
+    // Check if this is a character object with knowledge array
+    if (data.knowledge && Array.isArray(data.knowledge)) {
+      // Get the text from the knowledge array and clean it
+      const text = data.knowledge[0]
+        .replace(/\u0000/g, '') // Remove null characters
+        .replace(/\n\n/g, ' ');  // Replace double newlines with space
+      
+      if (typeof text === 'string') {
+        // Split into words
+        const words = text.split(' ');
+        const chunks = [];
+        let currentChunk = [];
+        let currentLength = 0;
+        
+        // Process each word
+        words.forEach(word => {
+          const wordToAdd = currentChunk.length > 0 ? ' ' + word : word;
+          
+          if (currentLength + wordToAdd.length > 1000 && currentChunk.length > 0) {
+            chunks.push(currentChunk.join(''));
+            currentChunk = [word];
+            currentLength = word.length;
+          } else {
+            currentChunk.push(wordToAdd);
+            currentLength += wordToAdd.length;
+          }
+        });
+        
+        // Add the last chunk if it exists
+        if (currentChunk.length > 0) {
+          chunks.push(currentChunk.join(''));
+        }
+        
+        // Update the knowledge array with chunks
+        data.knowledge = chunks;
+      }
+    }
+    
+    // Write the entire character object
     const jsonContent = JSON.stringify(data, null, 2);
     fs.writeFileSync(filePath, jsonContent, 'utf8');
     console.log(`Successfully wrote JSON file: ${filePath}`);

@@ -76,19 +76,33 @@ const getApiKey = async () => {
 };
 
 const processDocument = async (filePath) => {
+  // Logs which file is being processed
   console.log(`Processing file: ${filePath}`);
 
+  // Declare content variable that will hold the file's contents
   let content;
+
+  // Get the file extension (like .pdf, .txt) and convert to lowercase
   const fileExtension = path.extname(filePath).toLowerCase();
 
+  // Check if the file is a PDF
   if (fileExtension === '.pdf') {
-    const buffer = await fs.readFile(filePath);
-    const uint8Array = new Uint8Array(buffer);
-    content = await pdf2md(uint8Array);
+      // Read the PDF file into a buffer
+      const buffer = await fs.readFile(filePath);
+      
+      // Convert buffer to Uint8Array (array of 8-bit unsigned integers)
+      // needed by pdf2md library
+      const uint8Array = new Uint8Array(buffer);
+      
+      // Convert PDF to markdown using pdf2md library
+      content = await pdf2md(uint8Array);
+      
   } else {
-    content = await fs.readFile(filePath, 'utf8');
+      // If not a PDF, just read the file as UTF-8 text
+      content = await fs.readFile(filePath, 'utf8');
   }
   
+  // Return the processed content
   return content;
 };
 
