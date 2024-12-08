@@ -1,0 +1,23 @@
+FROM node:23.3.0
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Set the working directory
+WORKDIR /app
+
+# Add configuration files and install dependencies
+
+COPY package.json /app/package.json
+COPY tsconfig.json /app/tsconfig.json
+COPY pnpm-lock.yaml /app/pnpm-lock.yaml
+COPY .env /app/.env
+
+COPY src /app/src
+COPY characters /app/characters
+RUN pnpm i
+
+EXPOSE 3000
+
+# Command to run the container
+# CMD pnpm start --characters="./characters/Eliza.knowledge.character.json"
+CMD ["tail", "-f", "/dev/null"]
