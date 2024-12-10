@@ -1,16 +1,21 @@
 # Build stage
 FROM node:23-slim
 
-# Install dependencies in a single RUN command with proper cleanup
-RUN apt-get update && \
+# Clear any existing locks first
+RUN rm -rf /var/lib/apt/lists/* && \
+    rm -f /var/lib/apt/lists/lock && \
+    rm -f /var/cache/apt/archives/lock && \
+    rm -f /var/lib/dpkg/lock*
+
+# Install system dependencies
+RUN apt-get clean && \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     build-essential && \
     rm -rf /var/lib/apt/lists/* && \
-    rm -f /var/lib/apt/lists/lock && \
-    rm -f /var/cache/apt/archives/lock && \
-    rm -f /var/lib/dpkg/lock* && \
+    # Install global npm packages after system packages
     npm install -g pnpm playwright && \
     playwright install --with-deps chromium
 
