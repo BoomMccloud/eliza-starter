@@ -10,6 +10,27 @@ RUN while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do \
     python3 \
     python3-pip \
     build-essential \
+    # Playwright dependencies
+    libglib2.0-0 \
+    libnss3 \
+    libnspr4 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libdbus-1-3 \
+    libxcb1 \
+    libxkbcommon0 \
+    libx11-6 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libpango-1.0-0 \
+    libcairo2 \
+    libasound2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install pnpm globally
@@ -35,7 +56,7 @@ RUN ./node_modules/.bin/tsc
 # Production stage
 FROM node:23.3.0-slim
 
-# Install Python in production image with apt lock handling
+# Install Python and Playwright dependencies in production image
 RUN while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do \
     echo "Waiting for apt lock release..." && \
     sleep 1; \
@@ -43,6 +64,27 @@ RUN while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do \
     apt-get update && apt-get install -y \
     python3 \
     python3-pip \
+    # Playwright dependencies
+    libglib2.0-0 \
+    libnss3 \
+    libnspr4 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libdbus-1-3 \
+    libxcb1 \
+    libxkbcommon0 \
+    libx11-6 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libpango-1.0-0 \
+    libcairo2 \
+    libasound2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install pnpm globally
