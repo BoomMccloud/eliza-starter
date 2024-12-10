@@ -1,8 +1,12 @@
 # Build stage
 FROM node:23.3.0-slim AS builder
 
-# Install Python and build dependencies
-RUN apt-get update && apt-get install -y \
+# Install Python and build dependencies with apt lock handling
+RUN while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do \
+    echo "Waiting for apt lock release..." && \
+    sleep 1; \
+    done && \
+    apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     build-essential \
@@ -31,8 +35,12 @@ RUN ./node_modules/.bin/tsc
 # Production stage
 FROM node:23.3.0-slim
 
-# Install Python in production image
-RUN apt-get update && apt-get install -y \
+# Install Python in production image with apt lock handling
+RUN while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do \
+    echo "Waiting for apt lock release..." && \
+    sleep 1; \
+    done && \
+    apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     && rm -rf /var/lib/apt/lists/*
