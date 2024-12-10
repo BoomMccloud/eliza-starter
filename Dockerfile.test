@@ -1,0 +1,33 @@
+# Build stage
+FROM node:23-slim
+
+# Install dependencies in a single RUN command with proper cleanup
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    build-essential && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -f /var/lib/apt/lists/lock && \
+    rm -f /var/cache/apt/archives/lock && \
+    rm -f /var/lib/dpkg/lock* && \
+    npm install -g pnpm playwright && \
+    playwright install --with-deps chromium
+
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package.json tsconfig.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+# Copy source code and build
+COPY src ./src
+COPY characters ./characters
+COPY .env ./
+
+# Build TypeScript
+RUN ./node_modules/.bin/tsc
+
+EXPOSE 3000
+
+CMD ["tail", "-f", "/dev/null"]
