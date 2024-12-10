@@ -1,7 +1,7 @@
 services:
   olivia:
-    image: vdb:v1.0
-    container_name: vdb-service
+    image: agent:v1.0
+    container_name: agent-service
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -16,7 +16,7 @@ services:
 
   postgres:
     image: postgres:15
-    container_name: vdb-db
+    container_name: vector-db
     restart: always  # Added restart policy
     environment:
       - POSTGRES_USER=eliza
