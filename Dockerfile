@@ -1,5 +1,5 @@
 # Build stage
-FROM node:23.3.0-slim AS builder
+FROM node:22-slim AS builder
 
 # Install Python and build dependencies with apt lock handling
 RUN while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do \
@@ -54,7 +54,7 @@ COPY .env ./
 RUN ./node_modules/.bin/tsc
 
 # Production stage
-FROM node:23.3.0-slim
+FROM node:22-slim
 
 # Install Python and Playwright dependencies in production image
 RUN while fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do \
