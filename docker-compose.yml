@@ -10,7 +10,7 @@ services:
     networks:
       - network_service1
     environment:
-      - DATABASE_URL=postgresql://eliza:wenmoon123@vbd-db:5432/vdb
+      - DATABASE_URL=postgresql://eliza:wenmoon123@vector-db:5432/vdb
     depends_on:
       - postgres
 
